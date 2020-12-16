@@ -2,25 +2,28 @@
 		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.openmrs.maven.parents</groupId>
-        <artifactId>maven-parent-openmrs-module</artifactId>
-        <version>1.1.1</version>
-    </parent>
-
 	<groupId>org.openmrs.module</groupId>
-	<artifactId>basicmodule</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<artifactId>PDFGenerator</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Basic Module</name>
-	<description>Example OpenMRS Module that may be used as a basis for creating a new module.</description>
+	<name>PDF Generator</name>
+	<description>PDF generating</description>
 
-	<url>https://wiki.openmrs.org/x/FQ4z</url>
+	<developers>
+		<developer>
+			<name>bahmni</name>
+		</developer>
+	</developers>
+
+	<organization>
+		<name>OpenMRS</name>
+		<url>http://openmrs.org</url>
+	</organization>
 
 	<scm>
-		<connection>scm:git:git@github.com:openmrs/openmrs-module-basicmodule.git</connection>
-		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-basicmodule.git</developerConnection>
-		<url>https://github.com/openmrs/openmrs-module-basicmodule/</url>
+		<connection>scm:git:git://github.com/Bahmni-Covid19/openmrs-module-PDFGenerator.git</connection>
+		<developerConnection>scm:git:https://github.com/Bahmni-Covid19/openmrs-module-PDFGenerator.git</developerConnection>
+		<url>https://github.com/Bahmni/openmrs-module-PDFGenerator</url>
 	</scm>
 
 	<modules>
@@ -29,6 +32,29 @@
 	</modules>
 
     <properties>
-        <openmrs.platform.version>1.11.2</openmrs.platform.version>
+		<openMRSVersion>2.1.1</openMRSVersion>
+		<openMRSWebServicesVersion>2.24.0</openMRSWebServicesVersion>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>2.5</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.api</groupId>
+				<artifactId>openmrs-api</artifactId>
+				<version>${openMRSVersion}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
 </project>

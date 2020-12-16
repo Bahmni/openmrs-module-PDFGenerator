@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.basicmodule.web.controller;
+package org.openmrs.module.PDFGenerator.web.controller;
 
 import java.util.Collection;
 
@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping(value = "module/basicmodule/basicmoduleLink.form")
-public class BasicModuleFormController {
+public class PDFGeneratorFormController {
 	
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());

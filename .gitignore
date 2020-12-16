@@ -8,3 +8,11 @@ target
 *.jar
 *.war
 *.ear
+
+idea
+target/
+*.iml
+
+api/*.txt
+.DS_STORE
+.idea
