@@ -2,11 +2,11 @@
 
 <module configVersion="1.2">
 	<!-- Module Properties -->
-	<id>${project.parent.artifactId}</id>
-	<name>${project.parent.name}</name>
-	<version>${project.parent.version}</version>
-	<package>${project.parent.groupId}.${project.parent.artifactId}</package>
-	<author>bahmni</author>
+	<id>PDFGenerator</id>
+	<name>Bahmni PDF Generator</name>
+	<version>0.0.1-SNAPSHOT</version>
+	<package>org.bahmni.module.PDFGenerator</package>
+
 	<description>
 		${project.parent.description}
 	</description>
@@ -14,6 +14,27 @@
 	<!-- / Module Properties -->
 
 	<!-- Module Activator -->
-	<activator>org.bahmni.module.email.notification.PDFGeneratorActivator</activator>
+	<activator>org.bahmni.module.PDFGenerator.PDFGeneratorActivator</activator>
+
+	<require_modules>
+		<require_module>org.openmrs.module.webservices.rest</require_module>
+		<require_module version="${openmrsAtomfeedVersion}">org.ict4h.openmrs.openmrs-atomfeed</require_module>
+	</require_modules>
+
+	<!-- Internationalization -->
+	<!-- All message codes should start with @MODULE_ID@.* -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	<messages>
+		<lang>fr</lang>
+		<file>messages_fr.properties</file>
+	</messages>
+	<messages>
+		<lang>es</lang>
+		<file>messages_es.properties</file>
+	</messages>
+	<!-- /Internationalization -->
 </module>
 

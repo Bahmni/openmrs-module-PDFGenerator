@@ -2,10 +2,16 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.openmrs.module</groupId>
+		<groupId>org.bahmni.module</groupId>
 		<artifactId>PDFGenerator</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+
+	<artifactId>PDFGenerator-omod</artifactId>
+	<packaging>jar</packaging>
+	<name>PDF Generator OMOD</name>
+	<description>OpenMRS module project for PDF Generator</description>
+
 	<properties>
 		<MODULE_ID>PDFGenerator</MODULE_ID>
 		<MODULE_NAME>${project.name}</MODULE_NAME>
@@ -14,14 +20,9 @@
 		<openmrs.platform.version>2.1.1</openmrs.platform.version>
 	</properties>
 
-	<artifactId>PDFGenerator-omod</artifactId>
-	<packaging>jar</packaging>
-	<name>PDF Generator OMOD</name>
-	<description>OpenMRS module project for PDF Generator</description>
-
 	<dependencies>
         <dependency>
-            <groupId>org.openmrs.module</groupId>
+            <groupId>org.bahmni.module</groupId>
             <artifactId>PDFGenerator-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -62,6 +63,21 @@
 			<groupId>org.openmrs.web</groupId>
 			<artifactId>openmrs-web</artifactId>
 			<version>2.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>webservices.rest-omod-common</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
@@ -112,24 +128,6 @@
 				</execution>
 			</executions>
 		</plugin>
-		<plugin>
-			<groupId>org.jacoco</groupId>
-			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>${jacocoVersion}</version>
-			<configuration>
-				<includes>
-					<include>org/openmrs/module/appointments/web/**</include>
-				</includes>
-			</configuration>
-			<executions>
-				<execution>
-					<goals>
-						<goal>prepare-agent</goal>
-					</goals>
-				</execution>
-			</executions>
-		</plugin>
-
 		<plugin>
 			<groupId>org.jacoco</groupId>
 			<artifactId>jacoco-maven-plugin</artifactId>

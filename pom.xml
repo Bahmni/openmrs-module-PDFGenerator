@@ -2,23 +2,21 @@
 		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.openmrs.module</groupId>
+	<groupId>org.bahmni.module</groupId>
 	<artifactId>PDFGenerator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>PDF Generator</name>
+	<name>Bahmni PDF Generator</name>
 	<description>PDF generating</description>
 
 	<developers>
 		<developer>
-			<name>bahmni</name>
+			<name>Bahmnitw</name>
+			<email>bahmnicommunity@gmail.com</email>
+			<organization>Bahmni</organization>
+			<organizationUrl>https://github.com/Bahmni</organizationUrl>
 		</developer>
 	</developers>
-
-	<organization>
-		<name>OpenMRS</name>
-		<url>http://openmrs.org</url>
-	</organization>
 
 	<scm>
 		<connection>scm:git:git://github.com/Bahmni-Covid19/openmrs-module-PDFGenerator.git</connection>
@@ -195,12 +193,6 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.bahmni.module</groupId>
-				<artifactId>email-notification-omod</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-				<scope>compile</scope>
-			</dependency>
-			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>${junitVersion}</version>
@@ -289,11 +281,6 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
-		<repository>
-			<id>email-notification</id>
-			<name>Email Notification</name>
-			<url>https://bahmni-email-notification.s3.ap-south-1.amazonaws.com/snapshot/</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>

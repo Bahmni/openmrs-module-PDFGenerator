@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>Bahmni - Medical Prescription</title>
+    <link th:href="@{/prescription.css}" rel="stylesheet">
+</head>
+<body>
+<div class="pdf-container">
+    <div class="hospital-container">
+        <div class="image-block">
+            <img th:src="@{/images/kims.png}" width="70" height="70"/>
+        </div>
+        <div class="heading-block">
+            <h2>Kims Hospital</h2>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="doctor-container">
+        <div class="container-block">
+            <b>Doctor Name: </b><span>Dr Strange</span>
+        </div>
+        <div class="container-block">
+            <b>Doctor Contact Information: </b><span>drstrange@avengers.com</span>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="patient-container">
+        <div class="container-block">
+            <b>Patient's Phone number: </b> <span>718980231</span>
+        </div>
+        <div class="container-block">
+            <b>Patient's Name: </b> <span>Steve Rogers</span>
+        </div>
+    </div>
+
+    <div class="patient-container">
+        <div class="container-block">
+            <b>Gender: </b> <span>Male</span>
+        </div>
+        <div class="container-block">
+            <b>Patient's Id: </b> <span>qwdion123kl</span>
+        </div>
+    </div>
+
+    <div class="patient-container">
+        <div class="container-block">
+            <b>Age: </b> <span>1000</span>
+        </div>
+        <div class="container-block">
+            <b>Patient's Address: </b> <span th:text="${orderEntry.account.address.street}"></span><span th:text="${orderEntry.account.address.city}"></span><span th:text="${orderEntry.account.address.state}"></span><span th:text="${orderEntry.account.address.zipCode}"></span><span>Mahesh  the topu sdkfjbi  wjniv wnvrnv vnvnrnvenrvnervnirrnvinrevr   iuv3riuveirrnvi   ivberuvurev   wivbuierrvwowonasck wdkvh</span>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="prescriptions-container">
+        <h3>Prescriptions: </h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Medicine</th>
+                <th>Dose</th>
+                <th>Unit</th>
+                <th>Frequent</th>
+                <th>Duration</th>
+                <th>Quantity</th>
+                <th>Additional Information</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${orderEntry.items}">
+                <td th:text="${item.name}">Paracetamol</td>
+                <td>200 MG</td>
+                <td th:text="${item.quantity}">3</td>
+                <td>3 times per day</td>
+                <td>1 week</td>
+                <td th:text="${item.price}">10</td>
+                <td>Information</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <hr>
+
+    <div class="date-sign-container">
+        <div class="container-block">
+            <b>Signature: </b>
+        </div>
+        <div class="container-block date">
+            <b>Date: </b> <span th:text="${orderEntry.payment.month +'/'+ orderEntry.payment.year}">11/12/2020</span>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

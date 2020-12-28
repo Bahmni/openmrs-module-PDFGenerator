@@ -1,0 +1,66 @@
+
+body {
+    width: 80%;
+    margin: auto;
+}
+
+h2 {
+    margin: 0;
+    padding: 0;
+}
+
+hr {
+    border: 1px solid black;
+}
+
+.pdf-container {
+    border: 2px solid black;
+}
+
+.doctor-container, .patient-container, .prescriptions-container, .date-sign-container {
+    padding: 10px;
+}
+
+.hospital-container {
+    width: 250px;
+    padding: 0;
+}
+
+.hospital-container .image-block {
+    width: 100px;
+    display: inline-block;
+}
+
+.hospital-container .heading-block {
+    display: inline-block;
+    float: right;
+    margin-top: 25px;
+}
+
+.container-block {
+    display: inline-block;
+    width: 400px;
+}
+
+.prescriptions-container table {
+    width: 95%;
+    border-collapse: collapse;
+    border: 2px solid black;
+}
+
+.prescriptions-container th, td {
+    padding: 8px;
+    border: 1px solid #eee;
+}
+
+.prescriptions-container tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+.prescriptions-container td {
+    text-align: center;
+}
+
+.date {
+    text-align: right;
+}
