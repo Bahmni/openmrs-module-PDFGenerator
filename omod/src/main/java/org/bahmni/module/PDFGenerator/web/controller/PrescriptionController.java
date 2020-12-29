@@ -32,7 +32,6 @@ public class PrescriptionController extends BaseRestController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=prescription.pdf")
 				.contentType(MediaType.valueOf("application/pdf"))
 				.body(pdfInBytes);*/
-		return ResponseEntity.ok()
-				.body(prescription);
+		return ResponseEntity.ok(prescription);
 	}
 }

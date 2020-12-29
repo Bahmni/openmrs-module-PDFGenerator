@@ -30,9 +30,7 @@
 	</modules>
 
     <properties>
-		<openMRSVersion>2.1.1</openMRSVersion>
 		<openmrs.platform.version>2.1.1</openmrs.platform.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<junitVersion>4.12</junitVersion>
 		<powerMockVersion>1.6.5</powerMockVersion>
@@ -112,13 +110,7 @@
 			</plugin>
 		</plugins>
 	</pluginManagement>
-		<extensions>
-			<extension>
-				<groupId>com.github.platform-team</groupId>
-				<artifactId>aws-maven</artifactId>
-				<version>6.0.0</version>
-			</extension>
-		</extensions>
+
 	</build>
 
 	<dependencyManagement>
@@ -375,4 +367,14 @@
 		</build>
 	</profile>
 	</profiles>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>nexus-sonatype</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>nexus-sonatype</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
 </project>

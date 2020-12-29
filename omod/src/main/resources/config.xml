@@ -10,7 +10,6 @@
 	<description>
 		${project.parent.description}
 	</description>
-	<require_version>${openMRSVersion}</require_version>
 	<!-- / Module Properties -->
 
 	<!-- Module Activator -->
