@@ -1,6 +1,7 @@
 package org.bahmni.module.PDFGenerator.prescription;
 
 import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.kernel.colors.DeviceGray;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
@@ -12,21 +13,22 @@ import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.TextAlignment;
 import org.openmrs.Patient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
-@Component
+@Component("prescription")
 public class Prescription {
     private Doctor doctor;
     private Patient patient;
     private List<Medicine> medicines;
 
-    @Autowired
-    private PrescriptionPDFConfig prescriptionPDFConfig;
+    private Properties properties;
+
+    private PrescriptionPDFConfig prescriptionPDFConfig = new PrescriptionPDFConfig();
 
     public Prescription(Doctor doctor, Patient patient, List<Medicine> medicines) {
         this.doctor = doctor;
@@ -101,6 +103,10 @@ public class Prescription {
 
         document.add(table2);
 
+        document.add(new Paragraph());
+        document.add(line);
+        document.add(new Paragraph());
+
         document.close();
     }
 
@@ -110,6 +116,13 @@ public class Prescription {
         document.setMargins(10,10,10,10);
 
         PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+
+        document.add(new Paragraph());
+        SolidLine solidLine = new SolidLine();
+        solidLine.setLineWidth(1f);
+        LineSeparator line = new LineSeparator(solidLine);
+        document.add(line);
+        document.add(new Paragraph());
 
         Table table = new Table(2);
 
@@ -128,4 +141,53 @@ public class Prescription {
 
         document.close();
     }
+
+    public void loadPDFProperties() throws IOException {
+        this.properties = prescriptionPDFConfig.getProperties();
+    }
+
+    public void preparePDFWithAllMedicines() throws IOException {
+        int medicinePartStart = Integer.parseInt(this.properties.getProperty("prescription.template.height")) -
+                                    (Integer.parseInt(this.properties.getProperty("prescription.template.headerSize")) + 150);
+        int medicinePartEnd = Integer.parseInt(this.properties.getProperty("prescription.template.footerSize")) + 40;
+        int medicinePartHeight = medicinePartStart - medicinePartEnd;
+
+        PdfDocument pdfDocument = new PdfDocument(new PdfWriter("medicines.pdf"));
+        Document document = new Document(pdfDocument, new PageSize(550, medicinePartHeight));
+        document.setMargins(10,10,10,10);
+
+        PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+
+        Paragraph heading = new Paragraph().add(new Text("Prescriptions: ").setFont(bold).setFontSize(10f));
+        document.add(heading);
+
+        Table medicinesTable = new Table(7);
+
+        Cell[] headerCells = new Cell[]{
+                new Cell().setTextAlignment(TextAlignment.CENTER).setFontSize(10f).setPadding(4f).setBackgroundColor(new DeviceGray(0.75f)).add(new Paragraph("Medicine").setFont(bold)),
+                new Cell().setTextAlignment(TextAlignment.CENTER).setFontSize(10f).setPadding(4f).setBackgroundColor(new DeviceGray(0.75f)).add(new Paragraph("Dose").setFont(bold)),
+                new Cell().setTextAlignment(TextAlignment.CENTER).setFontSize(10f).setPadding(4f).setBackgroundColor(new DeviceGray(0.75f)).add(new Paragraph("Unit").setFont(bold)),
+                new Cell().setTextAlignment(TextAlignment.CENTER).setFontSize(10f).setPadding(4f).setBackgroundColor(new DeviceGray(0.75f)).add(new Paragraph("Frequent").setFont(bold)),
+                new Cell().setTextAlignment(TextAlignment.CENTER).setFontSize(10f).setPadding(4f).setBackgroundColor(new DeviceGray(0.75f)).add(new Paragraph("Duration").setFont(bold)),
+                new Cell().setTextAlignment(TextAlignment.CENTER).setFontSize(10f).setPadding(4f).setBackgroundColor(new DeviceGray(0.75f)).add(new Paragraph("Quantity").setFont(bold)),
+                new Cell().setTextAlignment(TextAlignment.CENTER).setFontSize(10f).setPadding(4f).setBackgroundColor(new DeviceGray(0.75f)).add(new Paragraph("Additional Information").setFont(bold))
+        };
+
+        for (Cell cell:headerCells) {
+            medicinesTable.addHeaderCell(cell);
+        }
+
+        for (Medicine medicine: this.medicines) {
+            Cell cell;
+            String []medicineDetails = medicine.toString().split("<!>");
+            for(String detail: medicineDetails) {
+                cell = new Cell().setFontSize(8f).setPadding(4f).setTextAlignment(TextAlignment.CENTER).add(new Paragraph(detail.trim()));
+                medicinesTable.addCell(cell);
+            }
+        }
+        document.add(medicinesTable);
+
+        document.close();
+    }
+
 }

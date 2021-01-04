@@ -1,5 +1,6 @@
 package org.bahmni.module.PDFGenerator.prescription;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.*;
@@ -13,7 +14,7 @@ import static org.junit.Assert.fail;
 
 public class PrescriptionTest {
 
-    Prescription prescription;
+    private Prescription prescription;
 
     @Before
     public void setUp() {
@@ -40,13 +41,33 @@ public class PrescriptionTest {
 
         List<Medicine> medicines = new ArrayList<>();
 
-        Medicine medicine1 = new Medicine("Paracetamol", "20 MG", "3 per day", "2 days", "10","After having food");
-        Medicine medicine2 = new Medicine("Medicine2", "20 MG", "3 per day", "2 days", "10","After having food");
-        Medicine medicine3 = new Medicine("Medicine3", "20 MG", "3 per day", "2 days", "10","After having food");
-        Medicine medicine4 = new Medicine("Medicine4", "20 MG", "3 per day", "2 days", "10","After having food");
+        Medicine medicine1 = new Medicine("Paracetamol", "20 MG", "10", "3 per day", "2 days", "10","After having food");
+        Medicine medicine2 = new Medicine("Medicine2", "20 MG",  "10", "3 per day", "2 days", "10","After having food");
+        Medicine medicine3 = new Medicine("Medicine3", "20 MG",  "10","3 per day", "2 days", "10","After having food");
+        Medicine medicine4 = new Medicine("Medicine4", "20 MG",  "10","3 per day", "2 days", "10","After having food");
+        Medicine medicine5 = new Medicine("Medicine5", "20 MG",  "10","3 per day", "2 days", "10","After having food");
+        Medicine medicine6 = new Medicine("Medicine6", "20 MG",  "10","3 per day", "2 days", "10","After having food");
+        Medicine medicine7 = new Medicine("Medicine7", "20 MG",  "10","3 per day", "2 days", "10","After having food");
+        Medicine medicine8 = new Medicine("Medicine8", "20 MG",  "10","3 per day", "2 days", "10","After having food");
+        Medicine medicine9 = new Medicine("Medicine9", "20 MG",  "10","3 per day", "2 days", "10","After having food");
+        Medicine medicine10 = new Medicine("Medicine10", "20 MG",  "10","3 per day", "2 days", "10","After having food");
+        Medicine medicine11 = new Medicine("Medicine11", "20 MG",  "10","3 per day", "2 days", "10","After having food");
+        Medicine medicine12 = new Medicine("Medicine12", "20 MG",  "10","3 per day", "2 days", "10","After having food");
+
         medicines.add(medicine1); medicines.add(medicine2); medicines.add(medicine3); medicines.add(medicine4);
+        medicines.add(medicine5); medicines.add(medicine6); medicines.add(medicine7); medicines.add(medicine8);
+        medicines.add(medicine9); medicines.add(medicine10); medicines.add(medicine11); medicines.add(medicine12);
+
+        medicines.add(medicine1); medicines.add(medicine2); medicines.add(medicine3); medicines.add(medicine4);
+        medicines.add(medicine5); medicines.add(medicine6); medicines.add(medicine7); medicines.add(medicine8);
+        medicines.add(medicine9); medicines.add(medicine10); medicines.add(medicine11); medicines.add(medicine12);
 
         prescription = new Prescription(doctor, patient, medicines);
+    }
+
+    @After
+    public void clear() {
+        prescription = null;
     }
 
     @Test
@@ -65,6 +86,25 @@ public class PrescriptionTest {
             prescription.preparePDFWithSignatureAndDate();
         } catch (IOException e) {
             fail("Exception while creating PDF with signature and date");
+        }
+    }
+
+
+    @Test
+    public void shouldLoadPDFProperties() {
+        try {
+            prescription.loadPDFProperties();
+        } catch (IOException e) {
+            fail("Exception while loading prescription templates properties");
+        }
+    }
+
+    @Test
+    public void shouldCreatePDFWithAllMedicines() {
+        try {
+            prescription.preparePDFWithAllMedicines();
+        } catch (IOException e) {
+            fail("Exception while creating PDF with medicines");
         }
     }
 
