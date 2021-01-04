@@ -16,3 +16,5 @@ target/
 api/*.txt
 .DS_STORE
 .idea
+
+*.pdf
