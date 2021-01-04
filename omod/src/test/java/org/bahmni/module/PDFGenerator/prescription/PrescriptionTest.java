@@ -1,18 +1,22 @@
 package org.bahmni.module.PDFGenerator.prescription;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.*;
 
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.fail;
+
 public class PrescriptionTest {
 
-    @Test
-    public void shouldCreatePDFWithDoctorAndPatientDetails() throws IOException {
+    Prescription prescription;
+
+    @Before
+    public void setUp() {
         Doctor doctor = new Doctor("Steven Strange", "strange@avengers.com");
 
         PersonName personName = new PersonName();
@@ -42,9 +46,27 @@ public class PrescriptionTest {
         Medicine medicine4 = new Medicine("Medicine4", "20 MG", "3 per day", "2 days", "10","After having food");
         medicines.add(medicine1); medicines.add(medicine2); medicines.add(medicine3); medicines.add(medicine4);
 
-        Prescription prescription = new Prescription(doctor, patient, medicines);
-
-        prescription.prepareDoctorAndPatientPDF();
+        prescription = new Prescription(doctor, patient, medicines);
     }
+
+    @Test
+    public void shouldCreatePDFWithDoctorAndPatientDetails() {
+        try {
+            prescription.preparePDFWithDoctorAndPatientDetails();
+        } catch (IOException e) {
+            fail("Exception while creating PDF with doctor and patient details");
+        }
+
+    }
+
+    @Test
+    public void shouldCreatePDFWithSignatureAndDate() {
+        try {
+            prescription.preparePDFWithSignatureAndDate();
+        } catch (IOException e) {
+            fail("Exception while creating PDF with signature and date");
+        }
+    }
+
 
 }
