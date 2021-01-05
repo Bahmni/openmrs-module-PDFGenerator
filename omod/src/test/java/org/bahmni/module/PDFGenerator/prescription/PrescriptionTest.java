@@ -1,5 +1,6 @@
 package org.bahmni.module.PDFGenerator.prescription;
 
+import com.itextpdf.text.DocumentException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -105,6 +106,17 @@ public class PrescriptionTest {
             prescription.preparePDFWithAllMedicines();
         } catch (IOException e) {
             fail("Exception while creating PDF with medicines");
+        }
+    }
+
+    @Test
+    public void shouldAttachAllPDFs() {
+        try {
+            prescription.attachAllPDFS();
+        } catch (IOException e) {
+            fail("Exception while attaching all PDFs");
+        } catch (DocumentException e) {
+            fail("Doc Exception while attaching all PDFs");
         }
     }
 
