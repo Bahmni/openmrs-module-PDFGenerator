@@ -2,6 +2,7 @@ package org.bahmni.module.PDFGenerator.prescription;
 
 import com.itextpdf.awt.geom.AffineTransform;
 import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.kernel.colors.DeviceGray;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
@@ -43,7 +44,7 @@ public class Prescription {
         this.medicines = medicines;
     }
 
-    public void preparePDFWithDoctorAndPatientDetails() throws IOException {
+    private void preparePDFWithDoctorAndPatientDetails() throws IOException {
         PdfDocument pdfDocument = new PdfDocument(new PdfWriter("doctor-patient.pdf"));
         Document document = new Document(pdfDocument, new PageSize(550, 150));
         document.setMargins(10,10,10,10);
@@ -117,7 +118,7 @@ public class Prescription {
         document.close();
     }
 
-    public void preparePDFWithSignatureAndDate() throws IOException {
+    private void preparePDFWithSignatureAndDate() throws IOException {
         PdfDocument pdfDocument = new PdfDocument(new PdfWriter("signature-date.pdf"));
         Document document = new Document(pdfDocument, new PageSize(550, 60));
         document.setMargins(10,10,10,10);
@@ -149,12 +150,11 @@ public class Prescription {
         document.close();
     }
 
-    public void loadPDFProperties() throws IOException {
+    private void loadPDFProperties() throws IOException {
         this.properties = prescriptionPDFConfig.getProperties();
     }
 
-    public void preparePDFWithAllMedicines() throws IOException {
-        loadPDFProperties();
+    private void preparePDFWithAllMedicines() throws IOException {
         int medicinePartStart = Integer.parseInt(this.properties.getProperty("prescription.template.height")) -
                                     (Integer.parseInt(this.properties.getProperty("prescription.template.headerSize")) + 150);
         int medicinePartEnd = Integer.parseInt(this.properties.getProperty("prescription.template.footerSize")) + 60;
@@ -199,8 +199,7 @@ public class Prescription {
         document.close();
     }
 
-    public void attachAllPDFS() throws IOException, DocumentException {
-        loadPDFProperties();
+    private void attachAllPDFS() throws IOException, DocumentException {
         PdfReader templateReader = new PdfReader("template.pdf");
         PdfStamper prescriptionPDF = new PdfStamper(templateReader, new FileOutputStream("medical-prescription.pdf"));
 
@@ -261,6 +260,19 @@ public class Prescription {
             if (i+1 <= noOfPages) prescriptionPDF.insertPage(i+1, new Rectangle(Integer.parseInt(this.properties.getProperty("prescription.template.width")), Integer.parseInt(this.properties.getProperty("prescription.template.height"))));
         }
         prescriptionPDF.close();
+    }
+
+    public byte[] createPrescriptionPDF() throws IOException, DocumentException {
+        this.loadPDFProperties();
+        this.preparePDFWithDoctorAndPatientDetails();
+        this.preparePDFWithAllMedicines();
+        this.preparePDFWithSignatureAndDate();
+        this.attachAllPDFS();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfDocument pdfDoc = new PdfDocument(new com.itextpdf.kernel.pdf.PdfReader("medical-prescription.pdf"), new PdfWriter(baos));
+
+        return baos.toByteArray();
     }
 
 }

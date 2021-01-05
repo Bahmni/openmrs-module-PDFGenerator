@@ -72,51 +72,13 @@ public class PrescriptionTest {
     }
 
     @Test
-    public void shouldCreatePDFWithDoctorAndPatientDetails() {
+    public void shouldReturnByteArrayOfCreatedPrescriptionPDF() {
         try {
-            prescription.preparePDFWithDoctorAndPatientDetails();
-        } catch (IOException e) {
-            fail("Exception while creating PDF with doctor and patient details");
-        }
-
-    }
-
-    @Test
-    public void shouldCreatePDFWithSignatureAndDate() {
-        try {
-            prescription.preparePDFWithSignatureAndDate();
-        } catch (IOException e) {
-            fail("Exception while creating PDF with signature and date");
-        }
-    }
-
-
-    @Test
-    public void shouldLoadPDFProperties() {
-        try {
-            prescription.loadPDFProperties();
-        } catch (IOException e) {
-            fail("Exception while loading prescription templates properties");
-        }
-    }
-
-    @Test
-    public void shouldCreatePDFWithAllMedicines() {
-        try {
-            prescription.preparePDFWithAllMedicines();
-        } catch (IOException e) {
-            fail("Exception while creating PDF with medicines");
-        }
-    }
-
-    @Test
-    public void shouldAttachAllPDFs() {
-        try {
-            prescription.attachAllPDFS();
-        } catch (IOException e) {
-            fail("Exception while attaching all PDFs");
+            byte[] prescriptionPDFBytes = prescription.createPrescriptionPDF();
         } catch (DocumentException e) {
-            fail("Doc Exception while attaching all PDFs");
+            fail("Document Exception while creating Prescription PDF");
+        } catch (IOException e) {
+            fail("IO Exception while creating Prescription PDF");
         }
     }
 
