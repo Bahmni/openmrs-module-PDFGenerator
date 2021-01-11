@@ -1,29 +1,27 @@
 package org.bahmni.module.PDFGenerator.prescription;
 
-import com.itextpdf.awt.geom.AffineTransform;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.kernel.colors.DeviceGray;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.AffineTransform;
 import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
+import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
+import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.TextAlignment;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfImportedPage;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfStamper;
 import org.openmrs.Patient;
 import org.springframework.stereotype.Component;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
@@ -199,70 +197,53 @@ public class Prescription {
         document.close();
     }
 
-    private void attachAllPDFS() throws IOException, DocumentException {
-        PdfReader templateReader = new PdfReader("template.pdf");
-        PdfStamper prescriptionPDF = new PdfStamper(templateReader, new FileOutputStream("medical-prescription.pdf"));
+    private void attachAllPDFS() throws IOException {
+        PdfDocument templateDoc = new PdfDocument(new PdfReader("template.pdf"));
 
-        PdfReader medicineReader = new PdfReader("medicines.pdf");
+        PdfDocument medicalPrescriptionDoc = new PdfDocument(new PdfWriter("medical-prescription.pdf"));
 
-        int noOfPages = medicineReader.getNumberOfPages();
+        PdfPage templatePage = templateDoc.getPage(1);
+        Rectangle template = templatePage.getPageSizeWithRotation();
+
+        PdfDocument medicinesDoc = new PdfDocument(new PdfReader("medicines.pdf"));
+
+        PdfDocument patientDoctorDoc = new PdfDocument(new PdfReader("doctor-patient.pdf"));
+        PdfPage pdPage = patientDoctorDoc.getPage(1);
+        PdfFormXObject doctorPatientCopy = pdPage.copyAsFormXObject(medicalPrescriptionDoc);
+
+        PdfDocument signatureDateDoc = new PdfDocument(new PdfReader("signature-date.pdf"));
+        PdfPage signatureDatePage = signatureDateDoc.getPage(1);
+        PdfFormXObject signatureDateCopy = signatureDatePage.copyAsFormXObject(medicalPrescriptionDoc);
+
+        int noOfPages = medicinesDoc.getNumberOfPages();
 
         for (int i=1; i<=noOfPages; i++) {
-            if(i > 1)  prescriptionPDF.replacePage(templateReader, 1, i);
+            PdfPage page = medicalPrescriptionDoc.addNewPage(templateDoc.getDefaultPageSize());
 
-            PdfContentByte canvas = prescriptionPDF.getOverContent(i);
+            PdfCanvas canvas = new PdfCanvas(page);
 
-            PdfReader patientDoctorDetailsPDFReader = new PdfReader("doctor-patient.pdf");
+            AffineTransform transformationMatrix = AffineTransform.getScaleInstance(page.getPageSize().getWidth() / template.getWidth(), page.getPageSize().getHeight() / template.getHeight());
+            canvas.concatMatrix(transformationMatrix);
 
-            PdfImportedPage page = prescriptionPDF.getImportedPage(patientDoctorDetailsPDFReader, 1);
+            PdfFormXObject pageCopy = templatePage.copyAsFormXObject(medicalPrescriptionDoc);
+            canvas.addXObject(pageCopy, 0, 0);
 
-            com.itextpdf.text.Image patientDoctorDetailsPDFInstance = com.itextpdf.text.Image.getInstance(page);
+            canvas.addXObject(doctorPatientCopy, 0, 422);
 
-            int doctorPatientDetailsEndingPosition = Integer.parseInt(this.properties.getProperty("prescription.template.height")) -
-                    (Integer.parseInt(this.properties.getProperty("prescription.template.headerSize")) + 150);
-
-            AffineTransform at = AffineTransform.getTranslateInstance(0, doctorPatientDetailsEndingPosition);
-            at.concatenate(AffineTransform.getScaleInstance(patientDoctorDetailsPDFInstance.getScaledWidth(), patientDoctorDetailsPDFInstance.getScaledHeight()));
-
-            canvas.addImage(patientDoctorDetailsPDFInstance, at);
+            PdfPage medicinePage = medicinesDoc.getPage(i);
+            PdfFormXObject prescriptionPageCopy = medicinePage.copyAsFormXObject(medicalPrescriptionDoc);
+            canvas.addXObject(prescriptionPageCopy, 0, 90);
 
 
-
-
-            PdfImportedPage medicinePage = prescriptionPDF.getImportedPage(medicineReader, i);
-
-            com.itextpdf.text.Image medicinePartInstance = com.itextpdf.text.Image.getInstance(medicinePage);
-
-            int medicinePartEndingPosition = Integer.parseInt(this.properties.getProperty("prescription.template.footerSize")) + 60;
-
-            at = AffineTransform.getTranslateInstance(0, medicinePartEndingPosition);
-            at.concatenate(AffineTransform.getScaleInstance(medicinePartInstance.getScaledWidth(), medicinePartInstance.getScaledHeight()));
-
-            canvas.addImage(medicinePartInstance, at);
-
-
-
-            PdfReader signatureDatePDFReader = new PdfReader("signature-date.pdf");
-
-            PdfImportedPage signatureDatePage = prescriptionPDF.getImportedPage(signatureDatePDFReader, 1);
-
-            com.itextpdf.text.Image signatureDatePDFInstance = com.itextpdf.text.Image.getInstance(signatureDatePage);
-
-            int signatureDatePartEndingPosition = Integer.parseInt(this.properties.getProperty("prescription.template.footerSize"));
-
-            at = AffineTransform.getTranslateInstance(0, signatureDatePartEndingPosition);
-            at.concatenate(AffineTransform.getScaleInstance(signatureDatePDFInstance.getScaledWidth(), signatureDatePDFInstance.getScaledHeight()));
-
-            canvas.addImage(signatureDatePDFInstance, at);
-
-
-
-            if (i+1 <= noOfPages) prescriptionPDF.insertPage(i+1, new Rectangle(Integer.parseInt(this.properties.getProperty("prescription.template.width")), Integer.parseInt(this.properties.getProperty("prescription.template.height"))));
+            canvas.addXObject(signatureDateCopy, 0, 50);
         }
-        prescriptionPDF.close();
+        medicalPrescriptionDoc.close();
+        medicinesDoc.close();
+        signatureDateDoc.close();
+        patientDoctorDoc.close();
     }
 
-    public byte[] createPrescriptionPDF() throws IOException, DocumentException {
+    public byte[] createPrescriptionPDF() throws IOException {
         this.loadPDFProperties();
         this.preparePDFWithDoctorAndPatientDetails();
         this.preparePDFWithAllMedicines();
@@ -270,7 +251,7 @@ public class Prescription {
         this.attachAllPDFS();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PdfDocument pdfDoc = new PdfDocument(new com.itextpdf.kernel.pdf.PdfReader("medical-prescription.pdf"), new PdfWriter(baos));
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader("medical-prescription.pdf"), new PdfWriter(baos));
 
         return baos.toByteArray();
     }

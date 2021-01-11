@@ -1,6 +1,5 @@
 package org.bahmni.module.PDFGenerator.prescription;
 
-import com.itextpdf.text.DocumentException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,6 +62,14 @@ public class PrescriptionTest {
         medicines.add(medicine5); medicines.add(medicine6); medicines.add(medicine7); medicines.add(medicine8);
         medicines.add(medicine9); medicines.add(medicine10); medicines.add(medicine11); medicines.add(medicine12);
 
+        medicines.add(medicine1); medicines.add(medicine2); medicines.add(medicine3); medicines.add(medicine4);
+        medicines.add(medicine5); medicines.add(medicine6); medicines.add(medicine7); medicines.add(medicine8);
+        medicines.add(medicine9); medicines.add(medicine10); medicines.add(medicine11); medicines.add(medicine12);
+
+        medicines.add(medicine1); medicines.add(medicine2); medicines.add(medicine3); medicines.add(medicine4);
+        medicines.add(medicine5); medicines.add(medicine6); medicines.add(medicine7); medicines.add(medicine8);
+        medicines.add(medicine9); medicines.add(medicine10); medicines.add(medicine11); medicines.add(medicine12);
+
         prescription = new Prescription(doctor, patient, medicines);
     }
 
@@ -75,8 +82,6 @@ public class PrescriptionTest {
     public void shouldReturnByteArrayOfCreatedPrescriptionPDF() {
         try {
             byte[] prescriptionPDFBytes = prescription.createPrescriptionPDF();
-        } catch (DocumentException e) {
-            fail("Document Exception while creating Prescription PDF");
         } catch (IOException e) {
             fail("IO Exception while creating Prescription PDF");
         }
