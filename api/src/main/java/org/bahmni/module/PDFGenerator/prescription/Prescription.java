@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
-@Component("prescription")
+@Component
 public class Prescription {
     private Doctor doctor;
     private Patient patient;
@@ -41,6 +41,8 @@ public class Prescription {
         this.patient = patient;
         this.medicines = medicines;
     }
+
+    public Prescription() {}
 
     private void preparePDFWithDoctorAndPatientDetails() throws IOException {
         PdfDocument pdfDocument = new PdfDocument(new PdfWriter("doctor-patient.pdf"));

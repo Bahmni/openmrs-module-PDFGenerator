@@ -249,9 +249,17 @@
 				<artifactId>layout</artifactId>
 				<version>7.1.12</version>
 			</dependency>
-
+			<dependency>
+				<groupId>org.bahmni.module</groupId>
+				<artifactId>bahmnicore-api</artifactId>
+				<version>0.92-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>emrapi-api</artifactId>
+				<version>1.23.0</version>
+			</dependency>
 		</dependencies>
-
 	</dependencyManagement>
 	<repositories>
 		<repository>
@@ -282,6 +290,19 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+				<id>repo.mybahmni.org</id>
+				<name>bahmni-artifactory-snapshots</name>
+				<url>http://repo.mybahmni.org.s3.amazonaws.com/artifactory/snapshot</url>
+				<snapshots>
+					<updatePolicy>always</updatePolicy>
+				</snapshots>
+			</repository>
+			<repository>
+				<id>repo.mybahmni.org-release</id>
+				<name>bahmni-artifactory-release</name>
+				<url>http://repo.mybahmni.org.s3.amazonaws.com/artifactory/release</url>
+			</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>

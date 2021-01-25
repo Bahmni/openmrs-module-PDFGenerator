@@ -127,7 +127,7 @@
 			<groupId>org.openmrs.api</groupId>
 			<artifactId>openmrs-api</artifactId>
 			<version>${openmrs.platform.version}</version>
-			<type>test-jar</type>
+			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -148,7 +148,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<!-- End OpenMRS core -->
-		<!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf -->
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>kernel</artifactId>
@@ -158,6 +157,10 @@
 			<groupId>com.itextpdf</groupId>
 			<artifactId>layout</artifactId>
 			<version>7.1.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>emrapi-api</artifactId>
 		</dependency>
 
 	</dependencies>

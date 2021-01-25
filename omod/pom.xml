@@ -74,6 +74,11 @@
 			<artifactId>gson</artifactId>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.bahmni.module</groupId>
+			<artifactId>bahmnicore-api</artifactId>
+			<version>0.92-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
