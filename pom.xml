@@ -240,16 +240,6 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>com.itextpdf</groupId>
-				<artifactId>kernel</artifactId>
-				<version>7.1.12</version>
-			</dependency>
-			<dependency>
-				<groupId>com.itextpdf</groupId>
-				<artifactId>layout</artifactId>
-				<version>7.1.12</version>
-			</dependency>
-			<dependency>
 				<groupId>org.bahmni.module</groupId>
 				<artifactId>bahmnicore-api</artifactId>
 				<version>0.92-SNAPSHOT</version>
@@ -258,6 +248,36 @@
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>emrapi-api</artifactId>
 				<version>1.23.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>kernel</artifactId>
+				<version>7.1.12</version>
+<!--				<scope>provided</scope>-->
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>layout</artifactId>
+				<version>7.1.12</version>
+<!--				<scope>provided</scope>-->
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>io</artifactId>
+				<version>7.1.12</version>
+<!--				<scope>provided</scope>-->
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.6.0</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.6.0</version>
+				<scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

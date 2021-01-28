@@ -1,7 +1,7 @@
 package org.bahmni.module.PDFGenerator.prescription;
 
 import com.itextpdf.io.font.constants.StandardFonts;
-import com.itextpdf.io.source.ByteArrayOutputStream;
+import java.io.ByteArrayOutputStream;
 import com.itextpdf.kernel.colors.DeviceGray;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
@@ -19,6 +19,8 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.TextAlignment;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +47,7 @@ public class Prescription {
     public Prescription() {}
 
     private void preparePDFWithDoctorAndPatientDetails() throws IOException {
-        PdfDocument pdfDocument = new PdfDocument(new PdfWriter("doctor-patient.pdf"));
+        PdfDocument pdfDocument = new PdfDocument(new PdfWriter(this.properties.getProperty("prescription.generate.location") + "doctor-patient.pdf"));
         Document document = new Document(pdfDocument, new PageSize(550, 150));
         document.setMargins(10,10,10,10);
 
@@ -119,7 +121,7 @@ public class Prescription {
     }
 
     private void preparePDFWithSignatureAndDate() throws IOException {
-        PdfDocument pdfDocument = new PdfDocument(new PdfWriter("signature-date.pdf"));
+        PdfDocument pdfDocument = new PdfDocument(new PdfWriter(this.properties.getProperty("prescription.generate.location") + "signature-date.pdf"));
         Document document = new Document(pdfDocument, new PageSize(550, 60));
         document.setMargins(10,10,10,10);
 
@@ -160,7 +162,7 @@ public class Prescription {
         int medicinePartEnd = Integer.parseInt(this.properties.getProperty("prescription.template.footerSize")) + 60;
         int medicinePartHeight = medicinePartStart - medicinePartEnd;
 
-        PdfDocument pdfDocument = new PdfDocument(new PdfWriter("medicines.pdf"));
+        PdfDocument pdfDocument = new PdfDocument(new PdfWriter(this.properties.getProperty("prescription.generate.location") + "medicines.pdf"));
         Document document = new Document(pdfDocument, new PageSize(550, medicinePartHeight));
         document.setMargins(10,10,10,10);
 
@@ -200,20 +202,20 @@ public class Prescription {
     }
 
     private void attachAllPDFS() throws IOException {
-        PdfDocument templateDoc = new PdfDocument(new PdfReader("template.pdf"));
+        PdfDocument templateDoc = new PdfDocument(new PdfReader(this.properties.getProperty("prescription.template.location")));
 
-        PdfDocument medicalPrescriptionDoc = new PdfDocument(new PdfWriter("medical-prescription.pdf"));
+        PdfDocument medicalPrescriptionDoc = new PdfDocument(new PdfWriter(this.properties.getProperty("prescription.generate.location") + "medical-prescription.pdf"));
 
         PdfPage templatePage = templateDoc.getPage(1);
         Rectangle template = templatePage.getPageSizeWithRotation();
 
-        PdfDocument medicinesDoc = new PdfDocument(new PdfReader("medicines.pdf"));
+        PdfDocument medicinesDoc = new PdfDocument(new PdfReader(this.properties.getProperty("prescription.generate.location") + "medicines.pdf"));
 
-        PdfDocument patientDoctorDoc = new PdfDocument(new PdfReader("doctor-patient.pdf"));
+        PdfDocument patientDoctorDoc = new PdfDocument(new PdfReader(this.properties.getProperty("prescription.generate.location") + "doctor-patient.pdf"));
         PdfPage pdPage = patientDoctorDoc.getPage(1);
         PdfFormXObject doctorPatientCopy = pdPage.copyAsFormXObject(medicalPrescriptionDoc);
 
-        PdfDocument signatureDateDoc = new PdfDocument(new PdfReader("signature-date.pdf"));
+        PdfDocument signatureDateDoc = new PdfDocument(new PdfReader(this.properties.getProperty("prescription.generate.location") + "signature-date.pdf"));
         PdfPage signatureDatePage = signatureDateDoc.getPage(1);
         PdfFormXObject signatureDateCopy = signatureDatePage.copyAsFormXObject(medicalPrescriptionDoc);
 
@@ -253,8 +255,8 @@ public class Prescription {
         this.attachAllPDFS();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PdfDocument pdfDoc = new PdfDocument(new PdfReader("medical-prescription.pdf"), new PdfWriter(baos));
-
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(this.properties.getProperty("prescription.generate.location") + "medical-prescription.pdf"), new PdfWriter(baos));
+        pdfDoc.close();
         return baos.toByteArray();
     }
 

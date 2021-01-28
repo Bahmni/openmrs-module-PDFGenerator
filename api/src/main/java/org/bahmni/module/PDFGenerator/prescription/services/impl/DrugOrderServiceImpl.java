@@ -9,6 +9,7 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.emrapi.utils.HibernateLazyLoader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,19 +21,13 @@ public class DrugOrderServiceImpl implements DrugOrderService {
     DrugOrderDao drugOrderDao;
 
     @Autowired
+    @Qualifier("patientService")
     PatientService openmrsPatientService;
 
     @Autowired
     OrderService orderService;
 
     private Log log = LogFactory.getLog(this.getClass());
-
-//    @Autowired
-//    public DrugOrderServiceImpl(DrugOrderDao drugOrderDao, PatientService openmrsPatientService, OrderService orderService) {
-//        this.drugOrderDao = drugOrderDao;
-//        this.openmrsPatientService = openmrsPatientService;
-//        this.orderService = orderService;
-//    }
 
     @Override
     public List<DrugOrder> getPrescribedDrugOrders(List<String> visitUuids) {
@@ -47,7 +42,7 @@ public class DrugOrderServiceImpl implements DrugOrderService {
 
     private List<DrugOrder> getActiveDrugOrders(String patientUuid, Date asOfDate, Set<Concept> conceptsToFilter,
                                                 Set<Concept> conceptsToExclude, Date startDate, Date endDate, Collection<Encounter> encounters) {
-        Patient patient = openmrsPatientService.getPatientByUuid(patientUuid);
+        Patient patient = getPatient(patientUuid);
         CareSetting careSettingByName = orderService.getCareSettingByName(CareSetting.CareSettingType.OUTPATIENT.toString());
         List<Order> orders = drugOrderDao.getActiveOrders(patient, orderService.getOrderTypeByName("Drug order"),
                 careSettingByName, asOfDate, conceptsToFilter, conceptsToExclude, startDate, endDate, encounters);
@@ -64,5 +59,10 @@ public class DrugOrderServiceImpl implements DrugOrderService {
             }
         }
         return drugOrders;
+    }
+
+    @Override
+    public Patient getPatient(String patientUuid) {
+        return openmrsPatientService.getPatientByUuid(patientUuid);
     }
 }

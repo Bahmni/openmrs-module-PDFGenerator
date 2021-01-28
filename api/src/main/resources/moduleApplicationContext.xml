@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <context:component-scan base-package="org.bahmni.module.PDFGenerator"/>
-    <context:component-scan base-package="org.bahmni.module"/>
+<!--    <context:component-scan base-package="org.bahmni.module"/>-->
 
     <bean id="drugOrderDao" class="org.bahmni.module.PDFGenerator.prescription.dao.impl.DrugOrderDaoImpl" />
 
