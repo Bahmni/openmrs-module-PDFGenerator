@@ -1,22 +1,20 @@
 package org.bahmni.module.PDFGenerator.prescription;
 
-import org.openmrs.Provider;
-
-public class Doctor extends Provider {
+public class Doctor {
     private String name;
     private String contactInformation;
+    private String uuid;
 
-    public Doctor(String name, String contactInformation) {
+    public Doctor(String name, String contactInformation, String uuid) {
         this.name = name;
         this.contactInformation = contactInformation;
+        this.uuid = uuid;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -27,5 +25,13 @@ public class Doctor extends Provider {
 
     public void setContactInformation(String contactInformation) {
         this.contactInformation = contactInformation;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

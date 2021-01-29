@@ -39,7 +39,7 @@ public class PrescriptionPDFController extends BaseRestController {
 		Date startDate = BahmniDateUtil.convertToDate(startDateStr, BahmniDateUtil.DateFormatType.UTC);
 		Date endDate = BahmniDateUtil.convertToDate(endDateStr, BahmniDateUtil.DateFormatType.UTC);
 
-		Doctor doctor = new Doctor("superman", "superman@bahmni.com");
+		Doctor doctor = new Doctor("superman", "superman@bahmni.com", "c1c26908-3f10-11e4-adec-0800271c1b75");
 		Patient patient = drugOrderService.getPatient(patientUuid);
 		List<Medicine> medicines = new ArrayList<>();
 		List<DrugOrder> drugOrders = getActiveOrders(patientUuid, startDate, endDate);

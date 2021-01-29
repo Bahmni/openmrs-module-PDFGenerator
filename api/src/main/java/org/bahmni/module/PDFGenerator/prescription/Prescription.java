@@ -2,6 +2,8 @@ package org.bahmni.module.PDFGenerator.prescription;
 
 import com.itextpdf.io.font.constants.StandardFonts;
 import java.io.ByteArrayOutputStream;
+
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.DeviceGray;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
@@ -19,12 +21,12 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.TextAlignment;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Properties;
 
@@ -38,6 +40,10 @@ public class Prescription {
 
     private PrescriptionPDFConfig prescriptionPDFConfig = new PrescriptionPDFConfig();
 
+    private static int DOCTOR_PATIENT_DETAILS_PDF_HEIGHT = 150;
+    private static int SIGNATURE_DATE_PDF_HEIGHT = 80;
+    private static int PDF_WIDTH = 550;
+
     public Prescription(Doctor doctor, Patient patient, List<Medicine> medicines) {
         this.doctor = doctor;
         this.patient = patient;
@@ -48,7 +54,7 @@ public class Prescription {
 
     private void preparePDFWithDoctorAndPatientDetails() throws IOException {
         PdfDocument pdfDocument = new PdfDocument(new PdfWriter(this.properties.getProperty("prescription.generate.location") + "doctor-patient.pdf"));
-        Document document = new Document(pdfDocument, new PageSize(550, 150));
+        Document document = new Document(pdfDocument, new PageSize(PDF_WIDTH, DOCTOR_PATIENT_DETAILS_PDF_HEIGHT));
         document.setMargins(10,10,10,10);
 
         PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
@@ -122,7 +128,7 @@ public class Prescription {
 
     private void preparePDFWithSignatureAndDate() throws IOException {
         PdfDocument pdfDocument = new PdfDocument(new PdfWriter(this.properties.getProperty("prescription.generate.location") + "signature-date.pdf"));
-        Document document = new Document(pdfDocument, new PageSize(550, 60));
+        Document document = new Document(pdfDocument, new PageSize(PDF_WIDTH, SIGNATURE_DATE_PDF_HEIGHT));
         document.setMargins(10,10,10,10);
 
         PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
@@ -137,10 +143,15 @@ public class Prescription {
         Table table = new Table(2);
 
         Paragraph p1 = new Paragraph().setWidth(250f)
-                .add(new Text("Doctor's Signature:  ").setFont(bold).setFontSize(8f));
+                .add(new Text("Doctor's Signature:  ").setFont(bold).setFontSize(8f))
+                .add(new Image(ImageDataFactory.create(this.properties.getProperty("prescription.providerSignature.location") + doctor.getUuid() + ".png")).setWidth(70).setHeight(30));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDateTime now = LocalDateTime.now();
 
         Paragraph p2 = new Paragraph().setWidth(250f)
-                .add(new Text("Date:  ").setFont(bold).setFontSize(8f));
+                .add(new Text("\nDate:  ").setFont(bold).setFontSize(8f))
+                .add(new Text(formatter.format(now)).setFontSize(8f));
 
         Cell cell1 = new Cell().setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).add(p1);
         Cell cell2 = new Cell().setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER).add(p2);
@@ -158,12 +169,12 @@ public class Prescription {
 
     private void preparePDFWithAllMedicines() throws IOException {
         int medicinePartStart = Integer.parseInt(this.properties.getProperty("prescription.template.height")) -
-                                    (Integer.parseInt(this.properties.getProperty("prescription.template.headerSize")) + 150);
-        int medicinePartEnd = Integer.parseInt(this.properties.getProperty("prescription.template.footerSize")) + 60;
+                                    (Integer.parseInt(this.properties.getProperty("prescription.template.headerSize")) + DOCTOR_PATIENT_DETAILS_PDF_HEIGHT);
+        int medicinePartEnd = Integer.parseInt(this.properties.getProperty("prescription.template.footerSize")) + SIGNATURE_DATE_PDF_HEIGHT;
         int medicinePartHeight = medicinePartStart - medicinePartEnd;
 
         PdfDocument pdfDocument = new PdfDocument(new PdfWriter(this.properties.getProperty("prescription.generate.location") + "medicines.pdf"));
-        Document document = new Document(pdfDocument, new PageSize(550, medicinePartHeight));
+        Document document = new Document(pdfDocument, new PageSize(PDF_WIDTH, medicinePartHeight));
         document.setMargins(10,10,10,10);
 
         PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
@@ -210,14 +221,17 @@ public class Prescription {
         Rectangle template = templatePage.getPageSizeWithRotation();
 
         PdfDocument medicinesDoc = new PdfDocument(new PdfReader(this.properties.getProperty("prescription.generate.location") + "medicines.pdf"));
+        int medicinePartYPosition = Integer.parseInt(this.properties.getProperty("prescription.template.footerSize")) + SIGNATURE_DATE_PDF_HEIGHT;
 
         PdfDocument patientDoctorDoc = new PdfDocument(new PdfReader(this.properties.getProperty("prescription.generate.location") + "doctor-patient.pdf"));
         PdfPage pdPage = patientDoctorDoc.getPage(1);
         PdfFormXObject doctorPatientCopy = pdPage.copyAsFormXObject(medicalPrescriptionDoc);
+        int doctorPatientPartYPosition = Integer.parseInt(this.properties.getProperty("prescription.template.height")) - (Integer.parseInt(this.properties.getProperty("prescription.template.headerSize")) + DOCTOR_PATIENT_DETAILS_PDF_HEIGHT);
 
         PdfDocument signatureDateDoc = new PdfDocument(new PdfReader(this.properties.getProperty("prescription.generate.location") + "signature-date.pdf"));
         PdfPage signatureDatePage = signatureDateDoc.getPage(1);
         PdfFormXObject signatureDateCopy = signatureDatePage.copyAsFormXObject(medicalPrescriptionDoc);
+        int signatureDatePartYPosition = Integer.parseInt(this.properties.getProperty("prescription.template.footerSize"));
 
         int noOfPages = medicinesDoc.getNumberOfPages();
 
@@ -232,14 +246,14 @@ public class Prescription {
             PdfFormXObject pageCopy = templatePage.copyAsFormXObject(medicalPrescriptionDoc);
             canvas.addXObject(pageCopy, 0, 0);
 
-            canvas.addXObject(doctorPatientCopy, 0, 422);
+            canvas.addXObject(doctorPatientCopy, 0, doctorPatientPartYPosition);
 
             PdfPage medicinePage = medicinesDoc.getPage(i);
             PdfFormXObject prescriptionPageCopy = medicinePage.copyAsFormXObject(medicalPrescriptionDoc);
-            canvas.addXObject(prescriptionPageCopy, 0, 90);
+            canvas.addXObject(prescriptionPageCopy, 0, medicinePartYPosition);
 
 
-            canvas.addXObject(signatureDateCopy, 0, 50);
+            canvas.addXObject(signatureDateCopy, 0, signatureDatePartYPosition);
         }
         medicalPrescriptionDoc.close();
         medicinesDoc.close();

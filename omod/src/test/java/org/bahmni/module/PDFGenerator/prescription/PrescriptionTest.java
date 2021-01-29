@@ -18,7 +18,7 @@ public class PrescriptionTest {
 
     @Before
     public void setUp() {
-        Doctor doctor = new Doctor("Steven Strange", "strange@avengers.com");
+        Doctor doctor = new Doctor("Steven Strange", "strange@avengers.com", "c1c26908-3f10-11e4-adec-0800271c1b75");
 
         PersonName personName = new PersonName();
         personName.setFamilyName("Steve");
