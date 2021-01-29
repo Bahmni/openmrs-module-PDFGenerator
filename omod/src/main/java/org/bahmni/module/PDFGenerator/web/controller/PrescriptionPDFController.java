@@ -44,7 +44,12 @@ public class PrescriptionPDFController extends BaseRestController {
 		List<Medicine> medicines = new ArrayList<>();
 		List<DrugOrder> drugOrders = getActiveOrders(patientUuid, startDate, endDate);
 		for (DrugOrder dr: drugOrders) {
-			Medicine medicine = new Medicine(dr.getDrug().getName(), ""+dr.getDose(), dr.getQuantityUnits().getDisplayString(), dr.getFrequency().toString(), "" + dr.getDuration(), "" + dr.getQuantity(), dr.getDosingInstructions());
+			String dosingInstructions = dr.getDosingInstructions();
+			dosingInstructions = dosingInstructions.replace("{", "");
+			dosingInstructions = dosingInstructions.replace("}", "");
+			dosingInstructions = dosingInstructions.replace("\"", " ");
+			dosingInstructions = dosingInstructions.replace(",", "\n");
+			Medicine medicine = new Medicine(dr.getDrug().getName(), ""+dr.getDose(), dr.getQuantityUnits().getDisplayString(), dr.getFrequency().toString(), "" + dr.getDuration(), "" + dr.getQuantity(), dosingInstructions);
 			medicines.add(medicine);
 		}
 
