@@ -82,28 +82,29 @@ public class Prescription {
         Table table2 = new Table(2);
 
         Paragraph p3 = new Paragraph().setWidth(250f)
-                .add(new Text("Patient's Phone number:  ").setFont(bold).setFontSize(8f))
-                .add(new Text("8134562512").setFontSize(8f));
-
-        Paragraph p4 = new Paragraph().setWidth(250f)
                 .add(new Text("Patient's Name:  ").setFont(bold).setFontSize(8f))
                 .add(new Text(patient.getFamilyName() + " " + patient.getGivenName()).setFontSize(8f));
 
-        Paragraph p5 = new Paragraph().setWidth(250f)
-                .add(new Text("Gender:  ").setFont(bold).setFontSize(8f))
-                .add(new Text(patient.getGender()).setFontSize(8f));
+        Paragraph p4 = new Paragraph().setWidth(250f)
+                .add(new Text("Age:  ").setFont(bold).setFontSize(8f))
+                .add(new Text("" + patient.getAge()).setFontSize(8f));
 
-        Paragraph p6 = new Paragraph().setWidth(250f)
+        Paragraph p5 = new Paragraph().setWidth(250f)
                 .add(new Text("Patient's Id:  ").setFont(bold).setFontSize(8f))
                 .add(new Text("" + patient.getId()).setFontSize(8f));
 
+        Paragraph p6 = new Paragraph().setWidth(250f)
+                .add(new Text("Patient's Phone number:  ").setFont(bold).setFontSize(8f))
+                .add(new Text("8134562512").setFontSize(8f));
+
         Paragraph p7 = new Paragraph().setWidth(250f)
-                .add(new Text("Age:  ").setFont(bold).setFontSize(8f))
-                .add(new Text("" + patient.getAge()).setFontSize(8f));
+                .add(new Text("Gender:  ").setFont(bold).setFontSize(8f))
+                .add(new Text(patient.getGender()).setFontSize(8f));
 
         Paragraph p8 = new Paragraph().setWidth(250f)
                 .add(new Text("Patient's Address:  ").setFont(bold).setFontSize(8f))
                 .add(new Text(patient.getPersonAddress().toString()).setFontSize(8f));
+
 
         Cell cell3 = new Cell().setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER).add(p3);
         Cell cell4 = new Cell().setBorder(Border.NO_BORDER).add(p4);
